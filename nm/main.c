@@ -19,39 +19,54 @@ int print_errors(const char *filename, int type)
         printf("my_nm: '%s': No such file\n", filename);
     else if (type == WRONG_FILE)
         printf("my_nm: %s: File format not recognized\n", filename);
+    else if (type == ORDINARY_FILE)
+        printf("my_nm: Warning: '%s' is not an ordinary file\n", filename);
     return 1;
+
 }
 
-static int elf_check_file(Elf64_Ehdr *hdr) {
+int elf_check_file(Elf64_Ehdr *hdr) {
     if(!hdr)
         return 0;
     return (hdr->e_ident[EI_MAG0] == ELFMAG0 && hdr->e_ident[EI_MAG1] == ELFMAG1
             && hdr->e_ident[EI_MAG2] == ELFMAG2 && hdr->e_ident[EI_MAG3] == ELFMAG3);
 }
 
+static int parse64(char *data, const char *filename)
+{
+    Elf64_Ehdr *hdr;
+    t_symbolInfo **symbols;
+
+    hdr = (Elf64_Ehdr *) data;
+    if (elf_check_file(hdr) == FALSE)
+        return print_errors(filename, WRONG_FILE);
+    if ((symbols = create_symbols_tab(hdr, data)) == NULL)
+        return 1;
+    bubble_sort(symbols);
+    print_symbols(symbols);
+    free_tab(symbols);
+    return 0;
+}
+
 static int start_nm(const char *filename)
 {
     char *data;
     struct stat s;
-    Elf64_Ehdr *hdr;
-    t_symbolInfo **symbols;
-    int fd;
+    int fd, res;
 
     if ((fd = open(filename, O_RDONLY)) == -1)
         return print_errors(filename, NO_FILE);
     fstat(fd, &s);
+    if (S_ISREG(s.st_mode) == 0)
+        return print_errors(filename, ORDINARY_FILE);
     data = mmap(NULL, (size_t) s.st_size, PROT_READ, MAP_PRIVATE, fd, 0);
     if (data != NULL) {
-        hdr = (Elf64_Ehdr *) data;
-        if (elf_check_file(hdr) == FALSE)
-            return print_errors(filename, WRONG_FILE);
-        if ((symbols = create_symbols_tab(hdr, data)) == NULL)
-            return 1;
-        bubble_sort(symbols);
-        print_symbols(symbols);
-        free_tab(symbols);
-        close(fd);
-        return 0;
+        if (data[EI_CLASS] == ELFCLASS64)
+            res = parse64(data, filename);
+        else if (data[EI_CLASS] == ELFCLASS32) {
+            res = parse32(data, filename);
+        }
+        return res;
     }
     return 1;
 }

@@ -1,12 +1,15 @@
-//
-// Created by NANAA on 16/02/18.
-//
+/*
+** EPITECH PROJECT, 2018
+** main
+** File description:
+** main
+*/
 
 #include <stdio.h>
 #include "../include/nm.h"
 #include <stdlib.h>
 
-static char get_type2(Elf64_Sym sym, Elf64_Shdr *shdr)
+static char get_type2(Elf32_Sym sym, Elf32_Shdr *shdr)
 {
     if (sym.st_shndx == SHN_UNDEF)
         return'U';
@@ -31,17 +34,17 @@ static char get_type2(Elf64_Sym sym, Elf64_Shdr *shdr)
     return -1;
 }
 
-static char get_type(Elf64_Sym sym, Elf64_Shdr *shdr)
+static char get_type(Elf32_Sym sym, Elf32_Shdr *shdr)
 {
     char type;
-    if (ELF64_ST_BIND(sym.st_info) == STB_GNU_UNIQUE)
+    if (ELF32_ST_BIND(sym.st_info) == STB_GNU_UNIQUE)
         type = 'u';
-    else if (ELF64_ST_BIND(sym.st_info) == STB_WEAK) {
+    else if (ELF32_ST_BIND(sym.st_info) == STB_WEAK) {
         type = 'W';
         if (sym.st_shndx == SHN_UNDEF)
             type = 'w';
     }
-    else if (ELF64_ST_BIND(sym.st_info) == STB_WEAK && ELF64_ST_TYPE(sym.st_info) == STT_OBJECT) {
+    else if (ELF32_ST_BIND(sym.st_info) == STB_WEAK && ELF32_ST_TYPE(sym.st_info) == STT_OBJECT) {
         type = 'V';
         if (sym.st_shndx == SHN_UNDEF)
             type = 'v';
@@ -50,7 +53,7 @@ static char get_type(Elf64_Sym sym, Elf64_Shdr *shdr)
         type = get_type2(sym, shdr);
     else
         type = 'T';
-    if (ELF64_ST_BIND(sym.st_info) == STB_LOCAL && type != '?')
+    if (ELF32_ST_BIND(sym.st_info) == STB_LOCAL && type != '?')
         type = (char) (type + 32);
     return type;
 }
@@ -66,18 +69,18 @@ static int add_symbol_to_tab(t_symbolInfo **symbols, const char *name, size_t va
     return TRUE;
 }
 
-static t_symbolInfo **fill_symbol_tab(Elf64_Ehdr *hdr, char *data, int i)
+static t_symbolInfo **fill_symbol_tab(Elf32_Ehdr *hdr, char *data, int i)
 {
-    Elf64_Shdr *shdr = (Elf64_Shdr *)(data + hdr->e_shoff);
-    Elf64_Sym * symtab;
+    Elf32_Shdr *shdr = (Elf32_Shdr *)(data + hdr->e_shoff);
+    Elf32_Sym * symtab;
     size_t nbSymbols, index = 0;
     t_symbolInfo **symbols;
     const char *nameAdr, *name;
 
-    nbSymbols = shdr[i].sh_size / sizeof(Elf64_Sym);
+    nbSymbols = shdr[i].sh_size / sizeof(Elf32_Sym);
     if ((symbols = calloc(sizeof (t_symbolInfo *) * nbSymbols, sizeof(t_symbolInfo *))) == NULL)
         return NULL;
-    symtab = (Elf64_Sym *) (data + shdr[i].sh_offset);
+    symtab = (Elf32_Sym *) (data + shdr[i].sh_offset);
     nameAdr = data + shdr[shdr[i].sh_link].sh_offset;
     for (size_t y = 0; y < nbSymbols; y++) {
         name = nameAdr + symtab[y].st_name;
@@ -90,16 +93,16 @@ static t_symbolInfo **fill_symbol_tab(Elf64_Ehdr *hdr, char *data, int i)
     return (symbols);
 }
 
-t_symbolInfo **create_symbols_tab(Elf64_Ehdr *hdr, char *data)
+t_symbolInfo **create_symbols_tab32(Elf32_Ehdr *hdr, char *data)
 {
-    Elf64_Shdr *shdr = (Elf64_Shdr *)(data + hdr->e_shoff);
+    Elf32_Shdr *shdr = (Elf32_Shdr *)(data + hdr->e_shoff);
     int shnum = hdr->e_shnum;
 
     if (hdr->e_shstrndx == SHN_UNDEF)
         return NULL;
     for (int i = 0; i < shnum; i++) {
         if (shdr[i].sh_type == SHT_SYMTAB) {
-           return fill_symbol_tab(hdr, data, i);
+            return fill_symbol_tab(hdr, data, i);
         }
     }
     return NULL;
