@@ -10,7 +10,6 @@
 #include <sys/mman.h>
 #include <sys/stat.h>
 #include <fcntl.h>
-#include <unistd.h>
 #include <stdlib.h>
 
 int print_errors(const char *filename, int type)
@@ -63,9 +62,10 @@ static int start_nm(const char *filename)
     if (data != NULL) {
         if (data[EI_CLASS] == ELFCLASS64)
             res = parse64(data, filename);
-        else if (data[EI_CLASS] == ELFCLASS32) {
+        else if (data[EI_CLASS] == ELFCLASS32)
             res = parse32(data, filename);
-        }
+        else
+            return print_errors(filename, WRONG_FILE);
         return res;
     }
     return 1;
