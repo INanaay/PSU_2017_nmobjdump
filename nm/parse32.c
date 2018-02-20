@@ -22,7 +22,7 @@ int parse32(char *data, const char *filename)
     if (elf_check_file32(hdr) == FALSE)
         return print_errors(filename, WRONG_FILE);
     if ((symbols = create_symbols_tab32(hdr, data)) == NULL)
-        return 1;
+        return print_errors(filename, NO_FILE);
     bubble_sort(symbols);
     print_symbols(symbols);
     free_tab(symbols);

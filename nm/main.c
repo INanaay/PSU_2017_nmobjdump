@@ -20,7 +20,9 @@ int print_errors(const char *filename, int type)
         printf("my_nm: %s: File format not recognized\n", filename);
     else if (type == ORDINARY_FILE)
         printf("my_nm: Warning: '%s' is not an ordinary file\n", filename);
-    return 1;
+    else if (type == NO_SYMBOLS)
+        printf("my_nm: %s: No symbols\n", filename);
+    return 84;
 
 }
 
@@ -40,7 +42,7 @@ static int parse64(char *data, const char *filename)
     if (elf_check_file(hdr) == FALSE)
         return print_errors(filename, WRONG_FILE);
     if ((symbols = create_symbols_tab(hdr, data)) == NULL)
-        return 1;
+        return print_errors(filename, NO_SYMBOLS);
     bubble_sort(symbols);
     print_symbols(symbols);
     free_tab(symbols);
@@ -68,7 +70,7 @@ static int start_nm(const char *filename)
             return print_errors(filename, WRONG_FILE);
         return res;
     }
-    return 1;
+    return 84;
 }
 
 int main (int ac , char ** av)

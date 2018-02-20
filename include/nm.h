@@ -12,6 +12,7 @@
 #define NO_FILE 0
 #define WRONG_FILE 1
 #define ORDINARY_FILE 2
+#define NO_SYMBOLS 3
 
 struct s_symbolInfo {
     const char *name;
