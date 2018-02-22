@@ -26,10 +26,10 @@ int print_errors(const char *name, int type)
 	if (type == NOFILE)
 		dprintf(2, "objdump: '%s': No such file\n", name);
 	else if (type == ORDINARYFILE)
-		printf(2, "objdump: Warning: '%s' is not an ordinary file\n",
+		dprintf(2, "objdump: Warning: '%s' is not an ordinary file\n",
 			name);
 	else if (type == WRONGFILE)
-		printf(2, "objdump: %s: File format not recognized\n", name);
+		dprintf(2, "objdump: %s: File format not recognized\n", name);
 	return (84);
 }
 

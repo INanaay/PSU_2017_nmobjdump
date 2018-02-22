@@ -20,10 +20,10 @@ int print_errors(const char *filename, int type)
 	else if (type == WRONG_FILE)
 		dprintf(2, "my_nm: %s: File format not recognized\n", filename);
 	else if (type == ORDINARY_FILE)
-		printf(2, "my_nm: Warning: '%s' is not an ordinary file\n",
+		dprintf(2, "my_nm: Warning: '%s' is not an ordinary file\n",
 	filename);
 	else if (type == NO_SYMBOLS)
-		printf(2, "my_nm: %s: No symbols\n", filename);
+		dprintf(2, "my_nm: %s: No symbols\n", filename);
 	return (84);
 
 }
