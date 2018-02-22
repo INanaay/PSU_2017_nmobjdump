@@ -1,6 +1,9 @@
-//
-// Created by NANAA on 14/02/18.
-//
+/*
+** EPITECH PROJECT, 2018
+** edfedf
+** File description:
+** edfe
+*/
 
 #ifndef PSU_2017_NMOBJDUMP_NM_H
 #define PSU_2017_NMOBJDUMP_NM_H
@@ -32,6 +35,5 @@ int print_errors(const char *filename, int type);
 int elf_check_file(Elf64_Ehdr *hdr);
 int parse32(char *data, const char *filename);
 void print_symbols32(t_symbolInfo **symbols);
-
 
 #endif //PSU_2017_NMOBJDUMP_NM_H

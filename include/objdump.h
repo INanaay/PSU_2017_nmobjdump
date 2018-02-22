@@ -1,6 +1,9 @@
-//
-// Created by NANAA on 19/02/18.
-//
+/*
+** EPITECH PROJECT, 2018
+** header
+** File description:
+** header
+*/
 
 #ifndef PSU_2017_NMOBJDUMP_OBJDUMP_H
 #define PSU_2017_NMOBJDUMP_OBJDUMP_H
@@ -10,7 +13,6 @@
 #define NOFILE 1
 #define ORDINARYFILE 2
 #define WRONGFILE 3
-
 
 struct s_flags {
 	int has_reloc;
