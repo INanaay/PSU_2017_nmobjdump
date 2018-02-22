@@ -20,12 +20,15 @@ static int elf_check_file32(Elf32_Ehdr *hdr) {
 		&& hdr->e_ident[EI_MAG2] == ELFMAG2 && hdr->e_ident[EI_MAG3] == ELFMAG3);
 }
 
-static void show_header(Elf32_Ehdr *hdr, const char *filename)
+static void show_header(Elf32_Ehdr *hdr, const char *filename, char *data)
 {
-	printf("\n%s     file format elf32-x86-32\n", filename);
+	t_flags flags;
+
+	printf("\n%s:     file format elf32-i386\n", filename);
 	printf("architecture: %s,", get_machine_type32(hdr->e_machine));
-	printf(" flags 0x%08x:\n\n", hdr->e_flags);
-	printf("start address 0x%016lx\n\n", hdr->e_entry);
+	printf(" flags 0x%08x:\n", get_flags32(&flags, hdr, data));
+	print_flags(&flags);
+	printf("start address 0x%08lx\n\n", hdr->e_entry);
 }
 
 static void print_letters(int start, unsigned char *buffer, int size)
@@ -78,7 +81,7 @@ int parse32(char *data, const char *filename)
 	if (elf_check_file32(hdr) == FALSE)
 		return print_errors(filename, WRONGFILE);
 	shdr = (Elf32_Shdr * )(data + hdr->e_shoff);
-	show_header(hdr, filename);
+	show_header(hdr, filename, data);
 	sh_strtab = &shdr[hdr->e_shstrndx];
 	for (int i = 1; i < hdr->e_shnum; i++) {
 		sectionName = data + sh_strtab->sh_offset + shdr[i].sh_name;

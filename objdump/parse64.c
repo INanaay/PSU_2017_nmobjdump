@@ -9,11 +9,14 @@
 #include "../include/objdump.h"
 #include "../include/nm.h"
 
-static void show_header(Elf64_Ehdr *hdr, const char *filename)
+static void show_header(Elf64_Ehdr *hdr, const char *filename, char *data)
 {
-	printf("\n%s     file format elf64-x86-64\n", filename);
+	t_flags flags;
+
+	printf("\n%s:     file format elf64-x86-64\n", filename);
 	printf("architecture: %s,", get_machine_type64(hdr->e_machine));
-	printf(" flags 0x%08x:\n\n", hdr->e_flags);
+	printf(" flags 0x%08x:\n", get_flags(&flags, hdr, data));
+	print_flags(&flags);
 	printf("start address 0x%016lx\n\n", hdr->e_entry);
 }
 
@@ -67,7 +70,7 @@ int parse64(char *data, const char *filename)
 	if (elf_check_file(hdr) == FALSE)
 		return print_errors(filename, WRONGFILE); // print_error
 	shdr = (Elf64_Shdr * )(data + hdr->e_shoff);
-	show_header(hdr, filename);
+	show_header(hdr, filename, data);
 	sh_strtab = &shdr[hdr->e_shstrndx];
 	for (int i = 1; i < hdr->e_shnum; i++) {
 		sectionName = data + sh_strtab->sh_offset + shdr[i].sh_name;

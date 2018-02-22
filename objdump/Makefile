@@ -10,7 +10,8 @@ NAME = ../my_objdump
 SRCS = main.c \
 	parse64.c \
 	getMachine.c \
-	parse32.c
+	parse32.c	\
+	flags.c
 
 INCLUDES = include
 
