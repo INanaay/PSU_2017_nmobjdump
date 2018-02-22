@@ -10,7 +10,7 @@
 #include <stdlib.h>
 
 static int add_symbol_to_tab(t_symbolInfo **symbols, const char *name,
-			     size_t value, size_t index)
+			size_t value, size_t index)
 {
 	symbols[index] = malloc(sizeof(t_symbolInfo));
 	if (!symbols[index])
@@ -21,7 +21,7 @@ static int add_symbol_to_tab(t_symbolInfo **symbols, const char *name,
 }
 
 static t_symbolInfo **parse_sections(size_t nbSymbols, const char *nameAdr,
-				     Elf64_Sym *symtab, Elf64_Shdr *shdr)
+				Elf64_Sym *symtab, Elf64_Shdr *shdr)
 {
 	t_symbolInfo **symbols;
 	const char *name;
@@ -33,10 +33,10 @@ static t_symbolInfo **parse_sections(size_t nbSymbols, const char *nameAdr,
 	for (size_t y = 0; y < nbSymbols; y++) {
 		name = nameAdr + symtab[y].st_name;
 		if (name[0] != 0 && name[0] != '\n' && symtab[y].st_info !=
-						       STT_FILE) {
+						STT_FILE) {
 			if ((add_symbol_to_tab(symbols, name,
-					       symtab[y].st_value,
-					       index)) == FALSE)
+			symtab[y].st_value,
+			index)) == FALSE)
 				return (NULL);
 			symbols[index]->type = get_type64(symtab[y], shdr);
 			index++;

@@ -8,6 +8,7 @@
 #ifndef PSU_2017_NMOBJDUMP_NM_H
 #define PSU_2017_NMOBJDUMP_NM_H
 
+#include <stdlib.h>
 #include <elf.h>
 
 #define TRUE 1
@@ -26,7 +27,7 @@ struct s_symbolInfo {
 typedef struct s_symbolInfo t_symbolInfo;
 
 int get_size(t_symbolInfo **symbols);
-t_symbolInfo **create_symbols_tab(Elf64_Ehdr *hdr, char *data);
+t_symbolInfo **create_symbols_tab64(Elf64_Ehdr *hdr, char *data);
 void print_symbols(t_symbolInfo **symbols);
 void free_tab(t_symbolInfo **symbols);
 void bubble_sort(t_symbolInfo **symbols);
@@ -35,5 +36,7 @@ int print_errors(const char *filename, int type);
 int elf_check_file(Elf64_Ehdr *hdr);
 int parse32(char *data, const char *filename);
 void print_symbols32(t_symbolInfo **symbols);
+char get_type64(Elf64_Sym sym, Elf64_Shdr *shdr);
+char get_type32(Elf32_Sym sym, Elf32_Shdr *shdr);
 
 #endif //PSU_2017_NMOBJDUMP_NM_H
