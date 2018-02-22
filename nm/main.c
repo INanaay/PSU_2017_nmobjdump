@@ -11,6 +11,7 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 #include <stdlib.h>
+#include <locale.h>
 
 int print_errors(const char *filename, int type)
 {
@@ -77,6 +78,7 @@ int main (int ac , char ** av)
 {
     int res, returnValue = 0;
 
+    setlocale(LC_COLLATE, "");
     if (ac == 1)
         return start_nm("a.out");
     if (ac == 2)

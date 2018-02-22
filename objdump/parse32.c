@@ -1,6 +1,9 @@
-//
-// Created by NANAA on 19/02/18.
-//
+/*
+** EPITECH PROJECT, 2018
+** Epitech scolarship project (4 years remaining)
+** File description:
+**      Made on 2018/02 by NANAA
+*/
 
 #include "stdio.h"
 #include <elf.h>
@@ -9,10 +12,18 @@
 #include "../include/objdump.h"
 #include "../include/nm.h"
 
-static void show_header(Elf64_Ehdr *hdr, const char *filename)
+
+static int elf_check_file32(Elf32_Ehdr *hdr) {
+	if(!hdr)
+		return 0;
+	return (hdr->e_ident[EI_MAG0] == ELFMAG0 && hdr->e_ident[EI_MAG1] == ELFMAG1
+		&& hdr->e_ident[EI_MAG2] == ELFMAG2 && hdr->e_ident[EI_MAG3] == ELFMAG3);
+}
+
+static void show_header(Elf32_Ehdr *hdr, const char *filename)
 {
-	printf("\n%s     file format elf64-x86-64\n", filename);
-	printf("architecture: %s,", get_machine_type64(hdr->e_machine));
+	printf("\n%s     file format elf32-x86-32\n", filename);
+	printf("architecture: %s,", get_machine_type32(hdr->e_machine));
 	printf(" flags 0x%08x:\n\n", hdr->e_flags);
 	printf("start address 0x%016lx\n\n", hdr->e_entry);
 }
@@ -33,7 +44,7 @@ static void print_letters(int start, unsigned char *buffer, int size)
 	}
 }
 
-int print_section(Elf64_Shdr *shdr, char *data)
+static int print_section32(Elf32_Shdr *shdr, char *data)
 {
 	unsigned int i = 0, j = 0;
 	int adr = (int) shdr->sh_addr;
@@ -57,16 +68,16 @@ int print_section(Elf64_Shdr *shdr, char *data)
 	}
 }
 
-int parse64(char *data, const char *filename)
+int parse32(char *data, const char *filename)
 {
-	Elf64_Ehdr *hdr;
+	Elf32_Ehdr *hdr;
 	const char *sectionName;
-	Elf64_Shdr *sh_strtab, *shdr;
+	Elf32_Shdr *sh_strtab, *shdr;
 
-	hdr = (Elf64_Ehdr *) data;
-	if (elf_check_file(hdr) == FALSE)
-		return print_errors(filename, WRONGFILE); // print_error
-	shdr = (Elf64_Shdr * )(data + hdr->e_shoff);
+	hdr = (Elf32_Ehdr *) data;
+	if (elf_check_file32(hdr) == FALSE)
+		return print_errors(filename, WRONGFILE);
+	shdr = (Elf32_Shdr * )(data + hdr->e_shoff);
 	show_header(hdr, filename);
 	sh_strtab = &shdr[hdr->e_shstrndx];
 	for (int i = 1; i < hdr->e_shnum; i++) {
@@ -74,7 +85,7 @@ int parse64(char *data, const char *filename)
 		if (strcmp(sectionName, ".strtab") != 0 && strcmp(sectionName, ".symtab") != 0 &&
 		    strcmp(sectionName, ".shstrtab") != 0 && strcmp(sectionName, ".bss") != 0) {
 			printf("Contents of section %s:\n", sectionName);
-			print_section(&shdr[i], data);
+			print_section32(&shdr[i], data);
 		}
 	}
 	return 0;

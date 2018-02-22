@@ -24,7 +24,7 @@ int parse32(char *data, const char *filename)
     if ((symbols = create_symbols_tab32(hdr, data)) == NULL)
         return print_errors(filename, NO_FILE);
     bubble_sort(symbols);
-    print_symbols(symbols);
+    print_symbols32(symbols);
     free_tab(symbols);
     return 0;
 }

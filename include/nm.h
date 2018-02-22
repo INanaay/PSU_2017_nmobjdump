@@ -27,11 +27,11 @@ t_symbolInfo **create_symbols_tab(Elf64_Ehdr *hdr, char *data);
 void print_symbols(t_symbolInfo **symbols);
 void free_tab(t_symbolInfo **symbols);
 void bubble_sort(t_symbolInfo **symbols);
-char *to_lower_and_ignore_underscore(const char *s);
 t_symbolInfo **create_symbols_tab32(Elf32_Ehdr *hdr, char *data);
 int print_errors(const char *filename, int type);
 int elf_check_file(Elf64_Ehdr *hdr);
 int parse32(char *data, const char *filename);
+void print_symbols32(t_symbolInfo **symbols);
 
 
 #endif //PSU_2017_NMOBJDUMP_NM_H
