@@ -12,12 +12,14 @@
 #include "../include/objdump.h"
 #include "../include/nm.h"
 
-
-static int elf_check_file32(Elf32_Ehdr *hdr) {
-	if(!hdr)
-		return 0;
-	return (hdr->e_ident[EI_MAG0] == ELFMAG0 && hdr->e_ident[EI_MAG1] == ELFMAG1
-		&& hdr->e_ident[EI_MAG2] == ELFMAG2 && hdr->e_ident[EI_MAG3] == ELFMAG3);
+static int elf_check_file32(Elf32_Ehdr *hdr)
+{
+	if (!hdr)
+		return (0);
+	return (hdr->e_ident[EI_MAG0] == ELFMAG0 &&
+		hdr->e_ident[EI_MAG1] == ELFMAG1
+		&& hdr->e_ident[EI_MAG2] == ELFMAG2 &&
+		hdr->e_ident[EI_MAG3] == ELFMAG3);
 }
 
 static void show_header(Elf32_Ehdr *hdr, const char *filename, char *data)
@@ -28,7 +30,7 @@ static void show_header(Elf32_Ehdr *hdr, const char *filename, char *data)
 	printf("architecture: %s,", get_machine_type32(hdr->e_machine));
 	printf(" flags 0x%08x:\n", get_flags32(&flags, hdr, data));
 	print_flags(&flags);
-	printf("start address 0x%08lx\n\n", hdr->e_entry);
+	printf("start address 0x%08lx\n\n", (long unsigned int) hdr->e_entry);
 }
 
 static void print_letters(int start, unsigned char *buffer, int size)
@@ -47,7 +49,7 @@ static void print_letters(int start, unsigned char *buffer, int size)
 	}
 }
 
-static int print_section32(Elf32_Shdr *shdr, char *data)
+static void print_section32(Elf32_Shdr *shdr, char *data)
 {
 	unsigned int i = 0, j = 0;
 	int adr = (int) shdr->sh_addr;
@@ -64,7 +66,7 @@ static int print_section32(Elf32_Shdr *shdr, char *data)
 				printf(" ");
 			}
 		}
-		print_letters(j, buffer, (int) shdr->sh_size);
+		print_letters((int) j, buffer, (int) shdr->sh_size);
 		j += 16;
 		adr += 16;
 		printf("\n");
@@ -79,17 +81,19 @@ int parse32(char *data, const char *filename)
 
 	hdr = (Elf32_Ehdr *) data;
 	if (elf_check_file32(hdr) == FALSE)
-		return print_errors(filename, WRONGFILE);
+		return (print_errors(filename, WRONGFILE));
 	shdr = (Elf32_Shdr * )(data + hdr->e_shoff);
 	show_header(hdr, filename, data);
 	sh_strtab = &shdr[hdr->e_shstrndx];
 	for (int i = 1; i < hdr->e_shnum; i++) {
 		sectionName = data + sh_strtab->sh_offset + shdr[i].sh_name;
-		if (strcmp(sectionName, ".strtab") != 0 && strcmp(sectionName, ".symtab") != 0 &&
-		    strcmp(sectionName, ".shstrtab") != 0 && strcmp(sectionName, ".bss") != 0) {
+		if (strcmp(sectionName, ".strtab") != 0 &&
+		strcmp(sectionName, ".symtab") != 0 &&
+		strcmp(sectionName, ".shstrtab") != 0 &&
+		strcmp(sectionName, ".bss") != 0) {
 			printf("Contents of section %s:\n", sectionName);
 			print_section32(&shdr[i], data);
 		}
 	}
-	return 0;
+	return (0);
 }

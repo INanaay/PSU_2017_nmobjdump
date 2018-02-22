@@ -1,6 +1,9 @@
-//
-// Created by NANAA on 19/02/18.
-//
+/*
+** EPITECH PROJECT, 2018
+** parse
+** File description:
+** parse
+*/
 
 #include "stdio.h"
 #include <elf.h>
@@ -36,7 +39,7 @@ static void print_letters(int start, unsigned char *buffer, int size)
 	}
 }
 
-int print_section(Elf64_Shdr *shdr, char *data)
+void print_section(Elf64_Shdr *shdr, char *data)
 {
 	unsigned int i = 0, j = 0;
 	int adr = (int) shdr->sh_addr;
@@ -53,7 +56,7 @@ int print_section(Elf64_Shdr *shdr, char *data)
 				printf(" ");
 			}
 		}
-		print_letters(j, buffer, (int) shdr->sh_size);
+		print_letters((int) j, buffer, (int) shdr->sh_size);
 		j += 16;
 		adr += 16;
 		printf("\n");
@@ -68,17 +71,19 @@ int parse64(char *data, const char *filename)
 
 	hdr = (Elf64_Ehdr *) data;
 	if (elf_check_file(hdr) == FALSE)
-		return print_errors(filename, WRONGFILE); // print_error
+		return (print_errors(filename, WRONGFILE));
 	shdr = (Elf64_Shdr * )(data + hdr->e_shoff);
 	show_header(hdr, filename, data);
 	sh_strtab = &shdr[hdr->e_shstrndx];
 	for (int i = 1; i < hdr->e_shnum; i++) {
 		sectionName = data + sh_strtab->sh_offset + shdr[i].sh_name;
-		if (strcmp(sectionName, ".strtab") != 0 && strcmp(sectionName, ".symtab") != 0 &&
-		    strcmp(sectionName, ".shstrtab") != 0 && strcmp(sectionName, ".bss") != 0) {
+		if (strcmp(sectionName, ".strtab") != 0 &&
+		strcmp(sectionName, ".symtab") != 0 &&
+		strcmp(sectionName, ".shstrtab") != 0 &&
+		strcmp(sectionName, ".bss") != 0) {
 			printf("Contents of section %s:\n", sectionName);
 			print_section(&shdr[i], data);
 		}
 	}
-	return 0;
+	return (0);
 }

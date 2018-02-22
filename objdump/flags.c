@@ -12,16 +12,17 @@
 static int get_flags2(t_flags *flags, Elf64_Ehdr *hdr, char *data)
 {
 	int res = 0;
-	Elf64_Shdr *shdr =  data + hdr->e_shoff;
+	Elf64_Shdr *shdr =  (Elf64_Shdr *) (data + hdr->e_shoff);
 
 	for (int i = 0; i < hdr->e_shnum; i++) {
-		if (shdr[i].sh_type == SHT_SYMTAB || shdr[i].sh_type == SHT_DYNSYM) {
+		if (shdr[i].sh_type == SHT_SYMTAB ||
+		shdr[i].sh_type == SHT_DYNSYM) {
 			flags->has_syms = 1;
 			res += HAS_SYMS;
 			break;
 		}
 	}
-	return res;
+	return (res);
 }
 
 int get_flags(t_flags *flags, Elf64_Ehdr *hdr, char *data)
@@ -43,22 +44,23 @@ int get_flags(t_flags *flags, Elf64_Ehdr *hdr, char *data)
 		res += DYNAMIC + D_PAGED;
 	}
 	res += get_flags2(flags, hdr, data);
-	return res;
+	return (res);
 }
 
 static int get_flags232(t_flags *flags, Elf32_Ehdr *hdr, char *data)
 {
 	int res = 0;
-	Elf64_Shdr *shdr =  data + hdr->e_shoff;
+	Elf64_Shdr *shdr =  (Elf64_Shdr *) (data + hdr->e_shoff);
 
 	for (int i = 0; i < hdr->e_shnum; i++) {
-		if (shdr[i].sh_type == SHT_SYMTAB || shdr[i].sh_type == SHT_DYNSYM) {
+		if (shdr[i].sh_type == SHT_SYMTAB ||
+		shdr[i].sh_type == SHT_DYNSYM) {
 			flags->has_syms = 1;
 			res += HAS_SYMS;
 			break;
 		}
 	}
-	return res;
+	return (res);
 }
 
 int get_flags32(t_flags *flags, Elf32_Ehdr *hdr, char *data)
@@ -80,7 +82,7 @@ int get_flags32(t_flags *flags, Elf32_Ehdr *hdr, char *data)
 		res += DYNAMIC + D_PAGED;
 	}
 	res += get_flags232(flags, hdr, data);
-	return res;
+	return (res);
 }
 
 void print_flags(t_flags *flags)

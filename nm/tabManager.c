@@ -1,6 +1,9 @@
-//
-// Created by NANAA on 16/02/18.
-//
+/*
+** EPITECH PROJECT, 2018
+** tab
+** File description:
+** tab
+*/
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -36,7 +39,7 @@ int get_size(t_symbolInfo **symbols)
 	int i;
 
 	for (i = 0; symbols[i] != NULL; i++);
-	return i;
+	return (i);
 }
 
 void free_tab(t_symbolInfo **symbols)
@@ -54,7 +57,8 @@ void bubble_sort(t_symbolInfo **symbols)
 
 	for (int i = size; i > 1; i--) {
 		for (int j = 0; j < i - 1; j++) {
-			if (strcoll(symbols[j]->name, symbols[j + 1]->name) > 0) {
+			if (strcoll(symbols[j]->name,
+				symbols[j + 1]->name) > 0) {
 				temp = symbols[j];
 				symbols[j] = symbols[j + 1];
 				symbols[j + 1] = temp;
