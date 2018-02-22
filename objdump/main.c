@@ -24,12 +24,12 @@ int elf_check_file(Elf64_Ehdr *hdr)
 int print_errors(const char *name, int type)
 {
 	if (type == NOFILE)
-		printf("objdump: '%s': No such file\n", name);
+		dprintf(2, "objdump: '%s': No such file\n", name);
 	else if (type == ORDINARYFILE)
-		printf("objdump: Warning: '%s' is not an ordinary file\n",
+		printf(2, "objdump: Warning: '%s' is not an ordinary file\n",
 			name);
 	else if (type == WRONGFILE)
-		printf("objdump: %s: File format not recognized\n", name);
+		printf(2, "objdump: %s: File format not recognized\n", name);
 	return (84);
 }
 

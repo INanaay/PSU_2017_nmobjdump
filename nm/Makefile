@@ -9,9 +9,11 @@ NAME = ../my_nm
 
 SRCS = main.c \
 	nm.c   \
-	tabManager.c	\
+	tab_manager.c	\
 	nm32.c		\
-	parse32.c
+	parse32.c	\
+	get_type_64.c	\
+	get_type_32.c
 
 INCLUDES = include
 

@@ -16,14 +16,14 @@
 int print_errors(const char *filename, int type)
 {
 	if (type == NO_FILE)
-		printf("my_nm: '%s': No such file\n", filename);
+		dprintf(2, "my_nm: '%s': No such file\n", filename);
 	else if (type == WRONG_FILE)
-		printf("my_nm: %s: File format not recognized\n", filename);
+		dprintf(2, "my_nm: %s: File format not recognized\n", filename);
 	else if (type == ORDINARY_FILE)
-		printf("my_nm: Warning: '%s' is not an ordinary file\n",
+		printf(2, "my_nm: Warning: '%s' is not an ordinary file\n",
 	filename);
 	else if (type == NO_SYMBOLS)
-		printf("my_nm: %s: No symbols\n", filename);
+		printf(2, "my_nm: %s: No symbols\n", filename);
 	return (84);
 
 }
@@ -46,7 +46,7 @@ static int parse64(char *data, const char *filename)
 	hdr = (Elf64_Ehdr *) data;
 	if (elf_check_file(hdr) == FALSE)
 		return (print_errors(filename, WRONG_FILE));
-	if ((symbols = create_symbols_tab(hdr, data)) == NULL)
+	if ((symbols = create_symbols_tab64(hdr, data)) == NULL)
 		return (print_errors(filename, NO_SYMBOLS));
 	bubble_sort(symbols);
 	print_symbols(symbols);

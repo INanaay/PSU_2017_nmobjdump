@@ -9,7 +9,7 @@ NAME = ../my_objdump
 
 SRCS = main.c \
 	parse64.c \
-	getMachine.c \
+	get_machine.c \
 	parse32.c	\
 	flags.c
 
