@@ -21,4 +21,4 @@ nm:
 objdump :
 	(cd objdump; make all)
 
-.PHONY: all clean flcean re nm
+.PHONY: all clean flcean re nm objdump
